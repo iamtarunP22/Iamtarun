@@ -1,0 +1,1408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nurqt Kumar — Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600&family=Bebas+Neue&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+:root{
+  --bg:#04040c;--bg2:#070714;--sur:#0c0c1e;
+  --gold:#f0a500;--red:#e8192c;--white:#f5f0eb;
+  --muted:#6a6a8a;--border:rgba(255,255,255,0.06);
+}
+body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;font-weight:300;overflow-x:hidden;cursor:none}
+
+/* ─── CURSOR ─── */
+#cur{width:8px;height:8px;background:var(--gold);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:99999;mix-blend-mode:difference;transition:transform .15s}
+#cur-ring{width:32px;height:32px;border:1px solid rgba(240,165,0,.5);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:99998;transition:all .35s cubic-bezier(.23,1,.32,1)}
+
+/* ════════════════════════════════════
+   INTRO SCENE
+════════════════════════════════════ */
+#intro{
+  position:fixed;inset:0;z-index:9000;
+  background:#000008;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+#particleCanvas{position:absolute;inset:0;width:100%;height:100%}
+
+/* Vignette */
+.intro-vig{position:absolute;inset:0;background:radial-gradient(ellipse 75% 75% at 50% 50%,transparent 30%,rgba(0,0,10,.85) 100%);pointer-events:none;z-index:4}
+
+/* "Hi" red strip — smaller, only wraps the word */
+.intro-center{position:relative;z-index:10;display:flex;flex-direction:column;align-items:center;gap:0}
+
+.hi-strip{
+  display:inline-flex;align-items:center;justify-content:center;
+  height:56px;
+  background:var(--red);
+  width:0px;overflow:hidden;
+  box-shadow:0 0 50px 12px rgba(232,25,44,.5),0 0 100px 30px rgba(232,25,44,.2);
+  animation:stripExpand .7s cubic-bezier(.16,1,.3,1) .3s both;
+  position:relative;
+}
+@keyframes stripExpand{
+  0%{width:0px;opacity:0}
+  10%{opacity:1}
+  100%{width:96px}
+}
+.hi-text{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:58px;letter-spacing:8px;
+  color:#fff;white-space:nowrap;
+  opacity:0;
+  animation:stampIn .3s ease .9s both;
+  line-height:1;padding:0 8px;
+}
+@keyframes stampIn{
+  0%{opacity:0;transform:scale(1.3)}
+  100%{opacity:1;transform:scale(1)}
+}
+
+/* Red glow burst */
+.hi-glow{
+  position:absolute;width:400px;height:140px;
+  background:radial-gradient(ellipse,rgba(232,25,44,.3),transparent 70%);
+  opacity:0;animation:glowBurst 1.2s ease .9s both;
+  pointer-events:none;
+}
+@keyframes glowBurst{0%{opacity:0;transform:scaleX(.2)}40%{opacity:1}100%{opacity:0;transform:scaleX(2.5)}}
+
+/* Flash */
+.red-flash{position:absolute;inset:0;background:var(--red);opacity:0;pointer-events:none;z-index:3;animation:flashBurst .2s ease 1s both}
+@keyframes flashBurst{0%{opacity:0}40%{opacity:.1}100%{opacity:0}}
+
+/* Typing name */
+.typing-wrap{
+  margin-top:20px;
+  display:flex;align-items:center;gap:0;
+  opacity:0;animation:fadeSlide .5s ease 1.2s both;
+  min-height:52px;
+}
+@keyframes fadeSlide{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+.typing-name{
+  font-family:'Courier Prime',monospace;
+  font-size:38px;font-weight:700;
+  color:var(--white);
+  letter-spacing:6px;
+  text-shadow:0 0 30px rgba(240,165,0,.3);
+}
+.typing-cursor{
+  display:inline-block;width:3px;height:42px;
+  background:var(--gold);margin-left:3px;
+  animation:blink .7s ease-in-out infinite;
+  border-radius:1px;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* tagline below name */
+.typing-tag{
+  font-family:'DM Sans',sans-serif;
+  font-size:13px;font-weight:400;letter-spacing:.22em;text-transform:uppercase;
+  color:rgba(255,255,255,.4);
+  margin-top:10px;
+  opacity:0;animation:fadeSlide .6s ease 2.8s both;
+}
+
+/* Wave lines */
+.wave-side{position:absolute;display:flex;gap:4px;align-items:center;opacity:0;animation:wIn .4s ease 1s both;z-index:10}
+.wave-side.wl{right:calc(50% + 62px)}
+.wave-side.wr{left:calc(50% + 62px)}
+@keyframes wIn{from{opacity:0}to{opacity:.7}}
+.wb{width:2px;background:var(--red);border-radius:2px;animation:waveBeat .5s ease-in-out infinite alternate}
+.wb:nth-child(1){height:6px;animation-delay:0s}.wb:nth-child(2){height:16px;animation-delay:.07s}
+.wb:nth-child(3){height:28px;animation-delay:.14s}.wb:nth-child(4){height:40px;animation-delay:.21s}
+.wb:nth-child(5){height:28px;animation-delay:.28s}.wb:nth-child(6){height:16px;animation-delay:.35s}
+.wb:nth-child(7){height:6px;animation-delay:.42s}
+@keyframes waveBeat{from{transform:scaleY(1)}to{transform:scaleY(.25)}}
+
+/* Enter button */
+.enter-btn{
+  position:absolute;bottom:9%;left:50%;transform:translateX(-50%);
+  padding:11px 36px;border:1px solid rgba(255,255,255,.15);border-radius:2px;
+  background:transparent;color:rgba(255,255,255,.65);
+  font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;
+  cursor:none;z-index:20;
+  opacity:0;animation:fadeSlide .7s ease 3.2s both;
+  transition:all .3s;
+}
+.enter-btn:hover{background:rgba(232,25,44,.15);border-color:var(--red);color:#fff}
+
+/* Intro out */
+#intro.out{animation:introOut .8s ease forwards}
+@keyframes introOut{0%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.05);pointer-events:none}}
+
+/* ════════════════════════════════════
+   MAIN APP
+════════════════════════════════════ */
+#app{opacity:0;transition:opacity 1s ease}
+#app.on{opacity:1}
+
+/* ─── NAV ─── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  padding:18px 60px;
+  display:flex;align-items:center;justify-content:space-between;
+  backdrop-filter:blur(24px);background:rgba(4,4,12,.8);
+  border-bottom:1px solid var(--border);transition:padding .3s;
+}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:4px;color:var(--white);text-decoration:none}
+.nav-logo span{color:var(--red)}
+.nav-links{display:flex;gap:30px;list-style:none}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;transition:color .3s;position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--red);transition:width .3s}
+.nav-links a:hover{color:var(--white)}.nav-links a:hover::after{width:100%}
+.ham{display:none;flex-direction:column;gap:5px;cursor:none;background:none;border:none}
+.ham span{width:22px;height:1.5px;background:var(--white);transition:all .3s}
+
+/* ─── HERO ─── */
+#hero{min-height:100vh;display:flex;align-items:center;position:relative;overflow:hidden;padding:130px 60px 80px}
+.hero-bg{position:absolute;inset:0}
+.hero-redline{position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,transparent,var(--red) 30%,var(--red) 70%,transparent);animation:linePulse 3s ease-in-out infinite}
+@keyframes linePulse{0%,100%{opacity:.3;box-shadow:none}50%{opacity:1;box-shadow:0 0 16px var(--red)}}
+.hero-noise{position:absolute;inset:0;opacity:.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.hero-grad{position:absolute;inset:0;background:radial-gradient(ellipse 55% 55% at 80% 50%,rgba(232,25,44,.06),transparent 65%),radial-gradient(ellipse 40% 55% at 15% 75%,rgba(240,165,0,.04),transparent 65%)}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.012) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.012) 1px,transparent 1px);background-size:80px 80px}
+
+.hero-content{position:relative;z-index:1;max-width:820px}
+.hero-eye{display:inline-flex;align-items:center;gap:10px;font-size:10px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--red);margin-bottom:24px;animation:fadeUp .8s ease both}
+.hero-eye-dot{width:5px;height:5px;background:var(--red);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.hero-h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(64px,10vw,130px);line-height:.9;letter-spacing:4px;margin-bottom:6px;animation:fadeUp .8s .1s ease both}
+.hero-h2{font-family:'Playfair Display',serif;font-size:clamp(42px,6vw,86px);font-style:italic;font-weight:400;color:transparent;-webkit-text-stroke:1px rgba(240,165,0,.6);letter-spacing:2px;line-height:1;animation:fadeUp .8s .18s ease both;display:block}
+.hero-desc{font-size:16px;color:var(--muted);line-height:1.8;max-width:480px;margin:24px 0 44px;animation:fadeUp .8s .26s ease both}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap;animation:fadeUp .8s .34s ease both}
+.btn-red{padding:13px 32px;background:var(--red);color:#fff;border:none;border-radius:2px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;letter-spacing:.08em;cursor:none;text-decoration:none;transition:all .3s;position:relative;overflow:hidden}
+.btn-red::after{content:'';position:absolute;inset:0;background:rgba(255,255,255,.15);transform:translateX(-100%) skewX(-15deg);transition:transform .5s}
+.btn-red:hover::after{transform:translateX(120%) skewX(-15deg)}
+.btn-red:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(232,25,44,.4)}
+.btn-ghost{padding:13px 32px;background:transparent;color:var(--white);border:1px solid var(--border);border-radius:2px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;letter-spacing:.08em;cursor:none;text-decoration:none;transition:all .3s}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-2px)}
+.hero-scroll{position:absolute;bottom:40px;left:60px;display:flex;align-items:center;gap:12px;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);animation:fadeUp .8s .5s ease both}
+.scroll-bar{width:40px;height:1px;background:rgba(255,255,255,.1);position:relative;overflow:hidden}
+.scroll-bar::after{content:'';position:absolute;inset:0;background:var(--red);transform:translateX(-100%);animation:scanBar 2.5s ease-in-out infinite}
+@keyframes scanBar{0%{transform:translateX(-100%)}50%{transform:translateX(0)}100%{transform:translateX(100%)}}
+.hero-stats{position:absolute;right:60px;bottom:60px;display:flex;gap:40px;animation:fadeUp .8s .42s ease both}
+.hstat{text-align:right}
+.hstat-n{font-family:'Bebas Neue',sans-serif;font-size:44px;color:var(--red);line-height:1}
+.hstat-l{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin-top:2px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+/* ─── SECTIONS ─── */
+section{padding:110px 60px}
+.sec-eye{display:inline-flex;align-items:center;gap:10px;font-size:10px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--red);margin-bottom:14px}
+.sec-eye::before{content:'';width:24px;height:1px;background:var(--red)}
+.sec-h{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,6vw,72px);letter-spacing:3px;line-height:.95;margin-bottom:12px}
+.sec-h em{color:var(--gold);font-style:italic;font-family:'Playfair Display',serif;font-size:.8em;letter-spacing:1px}
+.sec-sub{font-size:14px;color:var(--muted);max-width:460px;line-height:1.75;margin-bottom:52px}
+
+/* ─── ABOUT ─── */
+#about{background:var(--bg2)}
+.about-wrap{display:grid;grid-template-columns:1fr 1.4fr;gap:80px;align-items:center}
+.about-frame{aspect-ratio:4/5;background:var(--sur);border-radius:4px;border:1px solid var(--border);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.about-frame::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(232,25,44,.05),rgba(240,165,0,.04))}
+.about-ph{display:flex;flex-direction:column;align-items:center;gap:10px;position:relative;z-index:1}
+.avatar{width:80px;height:80px;border-radius:50%;background:rgba(232,25,44,.08);border:2px solid rgba(232,25,44,.2);display:flex;align-items:center;justify-content:center;font-size:32px}
+.cm{position:absolute;width:20px;height:20px;border-color:var(--red);border-style:solid;border-width:0}
+.cm-tl{top:14px;left:14px;border-top-width:2px;border-left-width:2px}.cm-tr{top:14px;right:14px;border-top-width:2px;border-right-width:2px}
+.cm-bl{bottom:14px;left:14px;border-bottom-width:2px;border-left-width:2px}.cm-br{bottom:14px;right:14px;border-bottom-width:2px;border-right-width:2px}
+.fbadge{position:absolute;background:var(--sur);border:1px solid rgba(232,25,44,.2);border-radius:8px;padding:10px 14px;backdrop-filter:blur(10px)}
+.fbadge.b1{bottom:-14px;right:-14px}.fbadge.b2{top:28px;left:-22px}
+.fbadge-icon{font-size:16px;margin-bottom:3px}.fbadge-label{font-size:12px;font-weight:500}.fbadge-sub{font-size:10px;color:var(--muted)}
+.about-p{font-size:15px;color:var(--muted);line-height:1.85;margin-bottom:16px}
+.about-p strong{color:var(--white)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+.chip{padding:5px 14px;background:var(--sur);border:1px solid var(--border);border-radius:2px;font-size:11px;color:var(--muted);transition:all .3s}
+.chip:hover{border-color:var(--red);color:var(--red)}
+
+/* ════════════════════════════════════
+   STORY HIGHLIGHTS (Instagram/WhatsApp style)
+════════════════════════════════════ */
+#highlights{background:var(--bg);padding:80px 60px}
+.hl-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;flex-wrap:wrap;gap:12px}
+.hl-strip{
+  display:flex;gap:20px;overflow-x:auto;padding-bottom:12px;
+  scrollbar-width:none;
+}
+.hl-strip::-webkit-scrollbar{display:none}
+
+/* Story circle */
+.hl-item{
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  cursor:none;flex-shrink:0;
+  transition:transform .3s;
+}
+.hl-item:hover{transform:scale(1.05)}
+.hl-ring{
+  width:72px;height:72px;border-radius:50%;
+  padding:3px;
+  background:conic-gradient(var(--red) 0deg,var(--gold) 180deg,var(--red) 360deg);
+  animation:ringRotate 4s linear infinite;
+  position:relative;
+}
+.hl-item.seen .hl-ring{background:conic-gradient(#444 0deg,#666 360deg);animation:none}
+@keyframes ringRotate{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.hl-inner{
+  width:100%;height:100%;border-radius:50%;
+  background:var(--sur);border:2px solid var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;overflow:hidden;position:relative;
+}
+.hl-inner img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.hl-label{font-size:11px;color:var(--muted);text-align:center;max-width:72px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hl-label strong{color:var(--white);display:block;font-size:10px;font-weight:500}
+
+/* Add story button */
+.hl-add{
+  display:flex;flex-direction:column;align-items:center;gap:8px;cursor:none;flex-shrink:0;
+  opacity:.5;transition:opacity .3s;
+}
+.hl-add:hover{opacity:1}
+.hl-add-circle{
+  width:72px;height:72px;border-radius:50%;
+  border:2px dashed rgba(255,255,255,.2);
+  display:flex;align-items:center;justify-content:center;font-size:24px;
+}
+
+/* Story Viewer Modal */
+.story-viewer{
+  position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:7000;
+  display:none;align-items:center;justify-content:center;
+  backdrop-filter:blur(8px);
+}
+.story-viewer.open{display:flex}
+.sv-box{
+  width:min(380px,90vw);
+  background:var(--sur);border-radius:12px;overflow:hidden;
+  position:relative;border:1px solid var(--border);
+}
+.sv-progress{display:flex;gap:3px;padding:10px 12px 0;position:absolute;top:0;left:0;right:0;z-index:2}
+.sv-prog-bar{flex:1;height:2px;background:rgba(255,255,255,.25);border-radius:2px;overflow:hidden}
+.sv-prog-fill{height:100%;background:#fff;width:0%;transition:none;border-radius:2px}
+.sv-prog-fill.active{animation:progRun var(--dur,4s) linear forwards}
+.sv-prog-fill.done{width:100%}
+@keyframes progRun{from{width:0%}to{width:100%}}
+.sv-header{
+  position:absolute;top:24px;left:12px;right:12px;z-index:2;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.sv-user{display:flex;align-items:center;gap:8px}
+.sv-avatar{width:32px;height:32px;border-radius:50%;background:var(--red);display:flex;align-items:center;justify-content:center;font-size:14px;border:1.5px solid rgba(255,255,255,.3)}
+.sv-uname{font-size:12px;font-weight:600}
+.sv-time{font-size:10px;color:rgba(255,255,255,.5)}
+.sv-close{background:none;border:none;color:#fff;font-size:20px;cursor:none;opacity:.7;transition:opacity .2s;padding:4px}
+.sv-close:hover{opacity:1}
+.sv-media{
+  width:100%;aspect-ratio:9/16;
+  background:var(--bg2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:80px;position:relative;overflow:hidden;
+}
+.sv-media img{width:100%;height:100%;object-fit:cover}
+.sv-media-bg{position:absolute;inset:0;background-size:cover;background-position:center;filter:blur(20px) brightness(.4);transform:scale(1.1)}
+.sv-media-emoji{font-size:80px;position:relative;z-index:1}
+.sv-caption{padding:16px;background:linear-gradient(to top,rgba(0,0,0,.8),transparent);position:absolute;bottom:0;left:0;right:0}
+.sv-cap-title{font-size:14px;font-weight:600;margin-bottom:3px}
+.sv-cap-text{font-size:12px;color:rgba(255,255,255,.7)}
+/* Side tap zones */
+.sv-tap-left{position:absolute;left:0;top:0;bottom:0;width:40%;cursor:none;z-index:3}
+.sv-tap-right{position:absolute;right:0;top:0;bottom:0;width:40%;cursor:none;z-index:3}
+.sv-nav-hint{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);font-size:10px;color:var(--muted);white-space:nowrap;margin-bottom:4px;letter-spacing:.1em}
+
+/* ─── INDIA + WORLD MAP ─── */
+#travel-map{background:var(--bg2)}
+.map-tabs-outer{display:flex;gap:0;border:1px solid var(--border);border-radius:4px;overflow:hidden;margin-bottom:24px;width:fit-content}
+.map-tab-outer{padding:10px 28px;background:none;border:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;cursor:none;transition:all .3s;border-right:1px solid var(--border)}
+.map-tab-outer:last-child{border-right:none}
+.map-tab-outer.on{background:var(--red);color:#fff}
+.map-tab-outer:hover:not(.on){color:var(--white)}
+
+.map-view{display:none}
+.map-view.on{display:block}
+
+/* India map container */
+.india-map-box{background:var(--sur);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.map-toolbar{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.map-legend{display:flex;gap:16px;flex-wrap:wrap}
+.leg{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)}
+.leg-dot{width:9px;height:9px;border-radius:50%}
+.ld-v{background:#4ade80;box-shadow:0 0 6px rgba(74,222,128,.7)}
+.ld-w{background:var(--gold);box-shadow:0 0 6px rgba(240,165,0,.7)}
+
+#indiaMap{width:100%;background:#060a16;display:block;cursor:none}
+.state-path{transition:fill .2s}
+.state-path:hover{fill:rgba(232,25,44,.1)!important}
+
+/* World map */
+.world-map-box{background:var(--sur);border:1px solid var(--border);border-radius:8px;overflow:hidden}
+#worldMap{width:100%;background:#06080f;display:block;cursor:none}
+
+/* Place list panel — bottom */
+.place-list-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;
+  padding:16px;max-height:280px;overflow-y:auto;
+  scrollbar-width:thin;scrollbar-color:var(--red) var(--sur);
+}
+.pi{
+  display:flex;align-items:center;gap:10px;padding:8px 10px;
+  border-radius:4px;border:1px solid var(--border);background:var(--bg2);
+  transition:all .3s;cursor:none;
+}
+.pi:hover{border-color:rgba(232,25,44,.25);transform:translateX(3px)}
+.pi-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.pi-name{font-size:12px;color:var(--white)}
+.pi-sub{font-size:10px;color:var(--muted)}
+
+.map-stats-row{padding:12px 20px;border-top:1px solid var(--border);display:flex;gap:20px;flex-wrap:wrap}
+.mst{text-align:center}
+.mst-n{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--gold)}
+.mst-l{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+
+/* Map tooltip */
+.map-tip{position:fixed;background:rgba(5,5,20,.96);border:1px solid rgba(240,165,0,.25);border-radius:6px;padding:10px 14px;font-size:12px;pointer-events:none;z-index:5000;opacity:0;transition:opacity .15s;max-width:220px}
+.tip-name{font-weight:600;margin-bottom:2px}
+.tip-state{font-size:10px;color:var(--muted);margin-bottom:3px}
+.tip-status{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em}
+
+/* ─── EDUCATION ─── */
+#education{background:var(--bg)}
+.edu-wrap{position:relative;padding-left:40px}
+.edu-wrap::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,var(--red),transparent)}
+.edu-card{position:relative;margin-bottom:36px;padding:24px 28px;background:var(--sur);border:1px solid var(--border);border-radius:4px;transition:all .35s}
+.edu-card::before{content:'';position:absolute;left:-49px;top:28px;width:18px;height:18px;background:var(--bg);border:2px solid var(--red);border-radius:50%;box-shadow:0 0 14px rgba(232,25,44,.4)}
+.edu-card:hover{border-color:rgba(232,25,44,.25);transform:translateX(6px);box-shadow:0 8px 32px rgba(232,25,44,.04)}
+.edu-yr{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--red);margin-bottom:6px}
+.edu-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;margin-bottom:4px}
+.edu-place{font-size:13px;color:var(--muted);margin-bottom:10px}
+.edu-desc{font-size:13px;color:var(--muted);line-height:1.65}
+
+/* ─── HOBBIES ─── */
+#hobbies{background:var(--bg2)}
+.hob-bento{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.hob{background:var(--sur);border:1px solid var(--border);border-radius:6px;padding:24px;transition:all .4s cubic-bezier(.23,1,.32,1);cursor:none;position:relative;overflow:hidden}
+.hob::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity .4s;border-radius:inherit}
+.hob:hover::before{opacity:1}.hob:hover{border-color:rgba(232,25,44,.2);transform:translateY(-4px);box-shadow:0 20px 50px rgba(0,0,0,.3)}
+.h1::before,.h6::before{background:radial-gradient(ellipse at 0 0,rgba(232,25,44,.07),transparent)}
+.h2::before{background:radial-gradient(ellipse at 0 0,rgba(240,165,0,.07),transparent)}
+.h3::before{background:radial-gradient(ellipse at 0 0,rgba(58,123,213,.07),transparent)}
+.h4::before{background:radial-gradient(ellipse at 0 0,rgba(74,222,128,.07),transparent)}
+.h5::before{background:radial-gradient(ellipse at 0 0,rgba(167,139,250,.07),transparent)}
+.hob.wide{grid-column:span 2}
+.hob-emoji{font-size:28px;margin-bottom:12px;display:block}
+.hob-name{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;margin-bottom:6px}
+.hob-desc{font-size:12px;color:var(--muted);line-height:1.6}
+
+/* ─── STORIES ─── */
+#stories{background:var(--bg)}
+.stories-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.story{background:var(--sur);border:1px solid var(--border);border-radius:4px;overflow:hidden;transition:all .4s;cursor:none}
+.story:hover{border-color:rgba(232,25,44,.25);transform:translateY(-5px);box-shadow:0 20px 50px rgba(0,0,0,.35)}
+.story.feat{grid-column:span 2}
+.story-thumb{height:190px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.story.feat .story-thumb{height:250px}
+.s-bg{position:absolute;inset:0;transition:transform .6s}
+.story:hover .s-bg{transform:scale(1.05)}
+.s-cat{position:absolute;top:12px;left:12px;padding:3px 10px;background:var(--red);color:#fff;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;border-radius:1px;z-index:1}
+.s-emoji{font-size:55px;position:relative;z-index:1}
+.story-body{padding:20px}
+.s-meta{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.s-title{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;line-height:1.3;margin-bottom:8px}
+.story.feat .s-title{font-size:24px}
+.s-exc{font-size:12px;color:var(--muted);line-height:1.6;margin-bottom:16px}
+.s-link{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--red);text-decoration:none;display:flex;align-items:center;gap:6px;transition:gap .3s}
+.story:hover .s-link{gap:12px}
+
+/* ─── GALLERY ─── */
+#gallery{background:var(--bg2)}
+.g-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:32px}
+.g-tab{padding:6px 16px;background:transparent;border:1px solid var(--border);border-radius:2px;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:10px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;cursor:none;transition:all .3s}
+.g-tab.on,.g-tab:hover{background:var(--red);border-color:var(--red);color:#fff}
+.g-mason{columns:4;column-gap:8px}
+.g-item{break-inside:avoid;margin-bottom:8px;border-radius:4px;overflow:hidden;position:relative;cursor:none;border:1px solid var(--border)}
+.g-img{width:100%;display:flex;align-items:center;justify-content:center;transition:transform .5s cubic-bezier(.23,1,.32,1);font-size:36px}
+.g-item:hover .g-img{transform:scale(1.05)}
+.g-hover{position:absolute;inset:0;background:rgba(0,0,0,.75);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;opacity:0;transition:opacity .3s}
+.g-item:hover .g-hover{opacity:1}
+.g-ht{font-size:9px;letter-spacing:.14em;text-transform:uppercase}
+.h120{height:120px}.h150{height:150px}.h180{height:180px}.h200{height:200px}.h240{height:240px}.h260{height:260px}
+
+/* ─── DOCUMENTS ─── */
+#documents{background:var(--bg)}
+.docs{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.doc{background:var(--sur);border:1px solid var(--border);border-radius:4px;padding:20px;transition:all .3s;cursor:none;text-decoration:none;color:inherit;display:block}
+.doc:hover{border-color:rgba(232,25,44,.25);transform:translateY(-3px);box-shadow:0 14px 36px rgba(0,0,0,.25)}
+.doc-ico{width:38px;height:38px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:16px;margin-bottom:12px}
+.di-p{background:rgba(232,25,44,.1)}.di-i{background:rgba(58,123,213,.1)}.di-d{background:rgba(240,165,0,.1)}.di-l{background:rgba(74,222,128,.1)}
+.doc-title{font-size:13px;font-weight:500;margin-bottom:3px}
+.doc-meta{font-size:11px;color:var(--muted)}
+.doc-div{margin-top:10px;padding-top:10px;border-top:1px solid var(--border);font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+/* ─── CONTACT ─── */
+#contact{background:var(--bg2);text-align:center;position:relative;overflow:hidden}
+.c-glow{position:absolute;width:600px;height:600px;background:radial-gradient(ellipse,rgba(232,25,44,.05),transparent 70%);left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none}
+.c-inner{position:relative;z-index:1;max-width:600px;margin:0 auto}
+.c-big{font-family:'Bebas Neue',sans-serif;font-size:clamp(60px,10vw,120px);letter-spacing:4px;line-height:.9;margin-bottom:20px}
+.c-big em{color:var(--red);font-style:normal}
+.c-sub{font-size:15px;color:var(--muted);line-height:1.75;margin-bottom:44px}
+.c-links{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.c-link{display:flex;align-items:center;gap:8px;padding:12px 20px;background:var(--sur);border:1px solid var(--border);border-radius:3px;text-decoration:none;color:var(--white);font-size:12px;font-weight:500;cursor:none;transition:all .3s}
+.c-link:hover{border-color:var(--red);color:var(--red);transform:translateY(-2px);box-shadow:0 10px 30px rgba(232,25,44,.08)}
+
+/* ─── FOOTER ─── */
+footer{background:var(--sur);border-top:1px solid var(--border);padding:26px 60px;display:flex;align-items:center;justify-content:space-between}
+.f-logo{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px}
+.f-logo span{color:var(--red)}
+.f-copy{font-size:11px;color:var(--muted)}
+.f-made{font-family:'Playfair Display',serif;font-style:italic;font-size:14px;color:var(--muted)}
+.f-made em{color:var(--gold);font-style:normal}
+
+/* ─── REVEAL ─── */
+.rv{opacity:0;transform:translateY(30px);transition:opacity .7s,transform .7s}
+.rv.show{opacity:1;transform:translateY(0)}
+.d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}
+
+/* ─── LIGHTBOX ─── */
+.lb{position:fixed;inset:0;background:rgba(0,0,0,.96);z-index:8000;display:none;align-items:center;justify-content:center}
+.lb.open{display:flex}
+.lb-x{position:absolute;top:20px;right:24px;font-size:20px;cursor:none;background:none;border:none;color:var(--white);opacity:.6;transition:opacity .2s}
+.lb-x:hover{opacity:1}
+.lb-c{font-size:100px}
+
+@media(max-width:960px){
+  nav{padding:14px 20px}.nav-links{display:none}.ham{display:flex}
+  section{padding:72px 20px}#hero{padding:100px 20px 60px}
+  #highlights{padding:60px 20px}
+  .about-wrap{grid-template-columns:1fr;gap:32px}
+  .stories-grid{grid-template-columns:1fr}.story.feat{grid-column:span 1}
+  .hob-bento{grid-template-columns:1fr 1fr}
+  .g-mason{columns:2}.docs{grid-template-columns:1fr 1fr}
+  .hero-stats{position:static;margin-top:32px;justify-content:flex-start}
+  footer{flex-direction:column;gap:10px;text-align:center}
+  .hl-strip{padding-bottom:8px}
+}
+</style>
+</head>
+<body>
+
+<div id="cur"></div>
+<div id="cur-ring"></div>
+<div class="map-tip" id="mapTip"><div class="tip-name" id="tipName"></div><div class="tip-state" id="tipState"></div><div class="tip-status" id="tipStatus"></div></div>
+
+<!-- LIGHTBOX -->
+<div class="lb" id="lb"><button class="lb-x" onclick="closeLB()">✕</button><div class="lb-c" id="lb-c"></div></div>
+
+<!-- STORY VIEWER -->
+<div class="story-viewer" id="storyViewer">
+  <div class="sv-box">
+    <div class="sv-progress" id="svProgress"></div>
+    <div class="sv-header">
+      <div class="sv-user">
+        <div class="sv-avatar">NK</div>
+        <div><div class="sv-uname">Nurqt Kumar</div><div class="sv-time" id="svTime"></div></div>
+      </div>
+      <button class="sv-close" onclick="closeStoryViewer()">✕</button>
+    </div>
+    <div class="sv-media" id="svMedia">
+      <div class="sv-media-bg" id="svBg"></div>
+      <div class="sv-media-emoji" id="svEmoji"></div>
+      <div class="sv-caption" id="svCaption"><div class="sv-cap-title" id="svTitle"></div><div class="sv-cap-text" id="svText"></div></div>
+    </div>
+    <div class="sv-tap-left" onclick="prevStory()"></div>
+    <div class="sv-tap-right" onclick="nextStory()"></div>
+  </div>
+</div>
+
+<!-- ══════════ INTRO ══════════ -->
+<div id="intro">
+  <canvas id="particleCanvas"></canvas>
+  <div class="intro-vig"></div>
+  <div class="red-flash"></div>
+
+  <div class="wave-side wl">
+    <div class="wb"></div><div class="wb"></div><div class="wb"></div>
+    <div class="wb"></div><div class="wb"></div><div class="wb"></div><div class="wb"></div>
+  </div>
+  <div class="wave-side wr">
+    <div class="wb"></div><div class="wb"></div><div class="wb"></div>
+    <div class="wb"></div><div class="wb"></div><div class="wb"></div><div class="wb"></div>
+  </div>
+
+  <div class="intro-center">
+    <div class="hi-glow"></div>
+    <div class="hi-strip">
+      <div class="hi-text">Hi</div>
+    </div>
+    <div class="typing-wrap">
+      <div class="typing-name" id="typingName"></div>
+      <div class="typing-cursor" id="typingCursor"></div>
+    </div>
+    <div class="typing-tag">Traveler · Storyteller · Free Spirit</div>
+  </div>
+
+  <button class="enter-btn" onclick="enterSite()">▶ &nbsp; Enter My World</button>
+</div>
+
+<!-- ══════════ APP ══════════ -->
+<div id="app">
+
+<nav id="nav">
+  <a href="#hero" class="nav-logo">NK<span>.</span></a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#about">About</a></li>
+    <li><a href="#highlights">Stories</a></li>
+    <li><a href="#travel-map">Travel Map</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#hobbies">Hobbies</a></li>
+    <li><a href="#stories">Blog</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#documents">Files</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="ham" onclick="toggleNav()"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg">
+    <div class="hero-redline"></div><div class="hero-noise"></div>
+    <div class="hero-grad"></div><div class="hero-grid"></div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-eye"><div class="hero-eye-dot"></div>Welcome to my world</div>
+    <div class="hero-h1">NURQT</div>
+    <span class="hero-h2">Kumar</span>
+    <p class="hero-desc">Traveler · Storyteller · Free Spirit. Sharing my journey through Bharat and beyond — the roads walked, stories collected, and freedom lived every single day.</p>
+    <div class="hero-btns">
+      <a href="#stories" class="btn-red">Read My Stories</a>
+      <a href="#travel-map" class="btn-ghost">Explore My Map</a>
+    </div>
+  </div>
+  <div class="hero-scroll"><div class="scroll-bar"></div>Scroll to explore</div>
+  <div class="hero-stats">
+    <div class="hstat"><div class="hstat-n" data-t="28">0</div><div class="hstat-l">States Visited</div></div>
+    <div class="hstat"><div class="hstat-n" data-t="150">0</div><div class="hstat-l">Places Seen</div></div>
+    <div class="hstat"><div class="hstat-n" data-t="48">0</div><div class="hstat-l">Stories</div></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-wrap">
+    <div class="rv" style="position:relative">
+      <div class="about-frame">
+        <div class="about-ph"><div class="avatar">🧑</div><p style="font-size:12px;color:var(--muted)">Your Photo Here</p></div>
+        <div class="cm cm-tl"></div><div class="cm cm-tr"></div><div class="cm cm-bl"></div><div class="cm cm-br"></div>
+      </div>
+      <div class="fbadge b1"><div class="fbadge-icon">🇮🇳</div><div class="fbadge-label">Proudly Indian</div><div class="fbadge-sub">Exploring Bharat</div></div>
+      <div class="fbadge b2"><div class="fbadge-icon">📖</div><div class="fbadge-label">Latest Story</div><div class="fbadge-sub">Just Published</div></div>
+    </div>
+    <div class="rv d1">
+      <div class="sec-eye">About Me</div>
+      <h2 class="sec-h">A LIFE OF<br><em>Freedom</em></h2>
+      <p class="about-p">Hello! I'm <strong>Nurqt Kumar</strong> — an Indian traveler, writer, and free spirit. Born in the land of Bharat, I've fallen in love with every corner of this incredible country before exploring the world.</p>
+      <p class="about-p">From the <strong>Himalayas to Kanyakumari</strong>, from <strong>Rajasthan's deserts to Kerala's backwaters</strong> — every road in India has a story. This portfolio is my way of sharing them.</p>
+      <p class="about-p">My journey of freedom began the day I decided that <strong>experiences matter more than things</strong>. Since then, I haven't stopped moving.</p>
+      <div class="chips">
+        <span class="chip">Traveling India</span><span class="chip">Writing</span><span class="chip">Photography</span>
+        <span class="chip">Storytelling</span><span class="chip">Heritage</span><span class="chip">Trekking</span>
+        <span class="chip">Street Food</span><span class="chip">Culture</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STORY HIGHLIGHTS -->
+<section id="highlights" style="padding:80px 60px">
+  <div class="hl-header rv">
+    <div>
+      <div class="sec-eye">Recent Moments</div>
+      <h2 class="sec-h" style="margin-bottom:4px">STORY<br><em>Highlights</em></h2>
+      <p style="font-size:13px;color:var(--muted);max-width:400px">Tap any circle to view recent moments — like Instagram stories. Replace emojis with your real photos via GitHub.</p>
+    </div>
+  </div>
+  <div class="hl-strip rv" id="hlStrip">
+    <!-- Generated by JS -->
+  </div>
+</section>
+
+<!-- TRAVEL MAP -->
+<section id="travel-map">
+  <div class="sec-eye rv">Travel Explorer</div>
+  <h2 class="sec-h rv">MY<br><em>Journey Map</em></h2>
+  <p class="sec-sub rv">India is home — every state a new chapter. The world is next. Toggle between Bharat and Beyond.</p>
+
+  <div class="rv">
+    <div class="map-tabs-outer">
+      <button class="map-tab-outer on" onclick="switchMapView('india',this)">🇮🇳 Bharat</button>
+      <button class="map-tab-outer" onclick="switchMapView('world',this)">🌍 World</button>
+    </div>
+
+    <!-- INDIA MAP -->
+    <div class="map-view on" id="mapIndia">
+      <div class="india-map-box">
+        <div class="map-toolbar">
+          <div class="map-legend">
+            <div class="leg"><div class="leg-dot ld-v"></div>Visited ✅</div>
+            <div class="leg"><div class="leg-dot ld-w"></div>Wishlist ⭐</div>
+          </div>
+          <span style="font-size:11px;color:var(--muted)">Hover state or pin for details</span>
+        </div>
+
+        <svg id="indiaMap" viewBox="0 0 560 640" xmlns="http://www.w3.org/2000/svg">
+          <rect width="560" height="640" fill="#060a16"/>
+          <g stroke="rgba(255,255,255,.025)" stroke-width=".5">
+            <line x1="0" y1="160" x2="560" y2="160"/><line x1="0" y1="320" x2="560" y2="320"/><line x1="0" y1="480" x2="560" y2="480"/>
+            <line x1="140" y1="0" x2="140" y2="640"/><line x1="280" y1="0" x2="280" y2="640"/><line x1="420" y1="0" x2="420" y2="640"/>
+          </g>
+
+          <!-- STATES — precise enough to be recognizable -->
+          <!-- Jammu & Kashmir -->
+          <path d="M150,22 L175,18 L210,20 L240,30 L255,55 L248,75 L232,88 L215,92 L195,90 L172,82 L155,68 L145,48 Z" fill="#141e30" stroke="rgba(255,255,255,.07)" stroke-width=".8" class="state-path" data-state="Jammu & Kashmir"/>
+          <!-- Ladakh -->
+          <path d="M210,20 L265,14 L295,22 L300,45 L285,62 L265,68 L248,75 L240,30 Z" fill="#1a2535" stroke="rgba(255,255,255,.07)" stroke-width=".8" class="state-path" data-state="Ladakh"/>
+          <!-- Himachal Pradesh -->
+          <path d="M215,92 L248,88 L272,95 L278,118 L262,130 L240,128 L220,120 Z" fill="#141e30" stroke="rgba(255,255,255,.07)" stroke-width=".8" class="state-path" data-state="Himachal Pradesh"/>
+          <!-- Punjab -->
+          <path d="M172,82 L215,92 L220,120 L205,135 L182,130 L165,112 L158,96 Z" fill="#141e30" stroke="rgba(255,255,255,.07)" stroke-width=".8" class="state-path" data-state="Punjab"/>
+          <!-- Haryana -->
+          <path d="M205,135 L240,128 L252,148 L246,168 L228,172 L208,165 L200,150 Z" fill="#141e30" stroke="rgba(255,255,255,.07)" stroke-width=".8" class="state-path" data-state="Haryana"/>
+          <!-- Delhi -->
+          <path d="M228,158 L242,155 L245,168 L232,170 L226,163 Z" fill="#1a2535" stroke="rgba(255,255,255,.09)" stroke-width=".8" class="state-path" data-state="Delhi"/>
+          <!-- Uttarakhand -->
+          <path d="M252,110 L300,106 L312,122 L298,136 L278,140 L262,132 Z" fill="#141e30" stroke="rgba(255,255,255,.07)" stroke-width=".8" class="state-path" data-state="Uttarakhand"/>
+          <!-- Uttar Pradesh -->
+          <path d="M228,172 L278,164 L312,162 L360,158 L368,185 L352,218 L308,228 L265,230 L232,222 L218,200 Z" fill="#141e30" stroke="rgba(255,255,255,.07)" stroke-width=".8" class="state-path" data-state="Uttar Pradesh"/>
+          <!-- Rajasthan -->
+          <path d="M118,122 L182,130 L205,165 L210,200 L198,232 L175,252 L145,260 L115,250 L92,225 L88,192 L96,158 L108,138 Z" fill="#141e30" stroke="rgba(255,255,255,.07)" stroke-width=".8" class="state-path" data-state="Rajasthan"/>
+          <!-- Gujarat -->
+          <path d="M88,192 L115,185 L125,215 L120,250 L108,278 L90,300 L70,308 L55,290 L50,262 L58,238 L72,212 Z" fill="#141e30" stroke="rgba(255,255,255,.07)" stroke-width=".8" class="state-path" data-state="Gujarat"/>
+          <!-- Madhya Pradesh -->
+          <path d="M178,252 L220,245 L265,248 L310,252 L322,278 L310,308 L278,322 L238,325 L200,315 L175,295 L165,272 Z" fill="#141e30" stroke="rgba(255,255,255,.07)" stroke-width=".8" class="state-path" data-state="Madhya Pradesh"/>
+          <!-- Bihar -->
+          <path d="M308,185 L360,180 L378,190 L380,212 L362,228 L330,232 L308,228 L305,210 Z" fill="#141e30" stroke="rgba(255,255,255,.07)" stroke-width=".8" class="state-path" data-state="Bihar"/>
+          <!-- Jharkhand -->
+          <path d="M330,232 L368,228 L385,242 L388,265 L368,278 L342,280 L322,268 L320,250 Z" fill="#141e30" stroke="rgba(255,255,255,.07)" stroke-width=".8" class="state-path" data-state="Jharkhand"/>
+          <!-- West Bengal -->
+          <path d="M380,175 L415,172 L428,195 L422,225 L405,248 L385,258 L372,245 L382,218 Z" fill="#141e30" stroke="rgba(255,255,255,.07)" stroke-width=".8" class="state-path" data-state="West Bengal"/>
+          <!-- Sikkim -->
+          <path d="M400,158 L418,154 L424,168 L410,172 L400,168 Z" fill="#1a2535" stroke="rgba(255,255,255,.07)" stroke-width=".8" class="state-path" data-state="Sikkim"/>
+          <!-- Assam -->
+          <path d="M428,168 L472,160 L490,175 L485,195 L458,202 L430,198 L426,182 Z" fill="#141e30" stroke="rgba(255,255,255,.07)" stroke-width=".8" class="state-path" data-state="Assam"/>
+          <!-- Arunachal Pradesh -->
+          <path d="M445,138 L505,132 L520,148 L512,165 L490,172 L472,162 L445,155 Z" fill="#141e30" stroke="rgba(255,255,255,.07)" stroke-width=".8" class="state-path" data-state="Arunachal Pradesh"/>
+          <!-- Nagaland -->
+          <path d="M485,195 L508,188 L515,205 L502,218 L482,215 Z" fill="#141e30" stroke="rgba(255,255,255,.07)" stroke-width=".8" class="state-path" data-state="Nagaland"/>
+          <!-- Manipur -->
+          <path d="M482,215 L505,212 L510,232 L495,242 L478,238 Z" fill="#141e30" stroke="rgba(255,255,255,.07)" stroke-width=".8" class="state-path" data-state="Manipur"/>
+          <!-- Mizoram -->
+          <path d="M468,238 L490,235 L494,255 L478,262 L462,252 Z" fill="#141e30" stroke="rgba(255,255,255,.07)" stroke-width=".8" class="state-path" data-state="Mizoram"/>
+          <!-- Tripura -->
+          <path d="M448,228 L468,225 L472,242 L458,248 L444,240 Z" fill="#141e30" stroke="rgba(255,255,255,.07)" stroke-width=".8" class="state-path" data-state="Tripura"/>
+          <!-- Meghalaya -->
+          <path d="M428,198 L458,196 L465,212 L448,222 L428,216 Z" fill="#141e30" stroke="rgba(255,255,255,.07)" stroke-width=".8" class="state-path" data-state="Meghalaya"/>
+          <!-- Chhattisgarh -->
+          <path d="M322,268 L362,265 L380,278 L382,308 L365,332 L338,338 L315,325 L308,308 Z" fill="#141e30" stroke="rgba(255,255,255,.07)" stroke-width=".8" class="state-path" data-state="Chhattisgarh"/>
+          <!-- Odisha -->
+          <path d="M372,258 L408,252 L425,272 L422,305 L402,328 L372,330 L352,318 L355,288 Z" fill="#141e30" stroke="rgba(255,255,255,.07)" stroke-width=".8" class="state-path" data-state="Odisha"/>
+          <!-- Maharashtra -->
+          <path d="M142,288 L178,278 L200,315 L215,345 L210,380 L192,400 L165,405 L135,390 L112,365 L108,328 L120,305 Z" fill="#141e30" stroke="rgba(255,255,255,.07)" stroke-width=".8" class="state-path" data-state="Maharashtra"/>
+          <!-- Goa -->
+          <path d="M132,400 L152,396 L158,414 L144,422 L128,416 Z" fill="#141e30" stroke="rgba(255,255,255,.07)" stroke-width=".8" class="state-path" data-state="Goa"/>
+          <!-- Karnataka -->
+          <path d="M152,396 L192,390 L222,402 L235,432 L228,462 L205,480 L178,484 L152,472 L132,448 L128,420 Z" fill="#141e30" stroke="rgba(255,255,255,.07)" stroke-width=".8" class="state-path" data-state="Karnataka"/>
+          <!-- Telangana -->
+          <path d="M265,330 L308,325 L332,338 L335,368 L318,395 L288,400 L260,388 L248,362 L252,342 Z" fill="#141e30" stroke="rgba(255,255,255,.07)" stroke-width=".8" class="state-path" data-state="Telangana"/>
+          <!-- Andhra Pradesh -->
+          <path d="M292,398 L335,392 L368,402 L375,428 L360,455 L328,468 L295,462 L268,444 L262,420 L270,404 Z" fill="#141e30" stroke="rgba(255,255,255,.07)" stroke-width=".8" class="state-path" data-state="Andhra Pradesh"/>
+          <!-- Kerala -->
+          <path d="M180,478 L212,474 L225,500 L218,532 L200,558 L178,560 L162,542 L160,515 L165,492 Z" fill="#141e30" stroke="rgba(255,255,255,.07)" stroke-width=".8" class="state-path" data-state="Kerala"/>
+          <!-- Tamil Nadu -->
+          <path d="M230,462 L270,455 L305,465 L322,490 L318,522 L292,548 L260,562 L232,554 L215,534 L218,505 L224,480 Z" fill="#141e30" stroke="rgba(255,255,255,.07)" stroke-width=".8" class="state-path" data-state="Tamil Nadu"/>
+
+          <!-- State labels -->
+          <g fill="rgba(255,255,255,.2)" font-family="DM Sans,sans-serif" font-size="7.5" text-anchor="middle">
+            <text x="196" y="58">J&K</text><text x="260" y="45">Ladakh</text>
+            <text x="250" y="115">HP</text><text x="190" y="108">PB</text>
+            <text x="228" y="152">HR</text><text x="237" y="164" font-size="5">DL</text>
+            <text x="282" y="122">UK</text><text x="292" y="198">UP</text>
+            <text x="150" y="198">RJ</text><text x="82" y="258">GJ</text>
+            <text x="246" y="288">MP</text><text x="345" y="204">BR</text>
+            <text x="355" y="255">JH</text><text x="399" y="215">WB</text>
+            <text x="460" y="182">AS</text><text x="480" y="148">AR</text>
+            <text x="500" y="205">NL</text><text x="496" y="228">MN</text>
+            <text x="480" y="250">MZ</text><text x="458" y="238">TR</text>
+            <text x="446" y="210">ML</text><text x="352" y="302">CG</text>
+            <text x="390" y="292">OD</text><text x="162" y="345">MH</text>
+            <text x="143" y="410">GA</text><text x="183" y="440">KA</text>
+            <text x="292" y="362">TG</text><text x="316" y="428">AP</text>
+            <text x="192" y="520">KL</text><text x="268" y="510">TN</text>
+          </g>
+
+          <!-- Pins rendered by JS -->
+          <g id="indiaPins"></g>
+        </svg>
+
+        <div class="place-list-grid" id="indiaPlaceList"></div>
+        <div class="map-stats-row">
+          <div class="mst"><div class="mst-n" id="ind-v">0</div><div class="mst-l">Visited</div></div>
+          <div class="mst"><div class="mst-n" id="ind-w">0</div><div class="mst-l">Wishlist</div></div>
+          <div class="mst"><div class="mst-n" id="ind-all">0</div><div class="mst-l">Total</div></div>
+          <div class="mst"><div class="mst-n" id="ind-states">0</div><div class="mst-l">States</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WORLD MAP -->
+    <div class="map-view" id="mapWorld">
+      <div class="world-map-box">
+        <div class="map-toolbar">
+          <div class="map-legend">
+            <div class="leg"><div class="leg-dot ld-v"></div>Visited ✅</div>
+            <div class="leg"><div class="leg-dot ld-w"></div>Wishlist ⭐</div>
+          </div>
+          <span style="font-size:11px;color:var(--muted)">Beyond Bharat — the world awaits 🌍</span>
+        </div>
+        <svg id="worldMap" viewBox="0 0 1000 500" xmlns="http://www.w3.org/2000/svg">
+          <rect width="1000" height="500" fill="#06080f"/>
+          <g stroke="rgba(255,255,255,.02)" stroke-width=".5">
+            <line x1="0" y1="125" x2="1000" y2="125"/><line x1="0" y1="250" x2="1000" y2="250"/>
+            <line x1="0" y1="375" x2="1000" y2="375"/>
+            <line x1="250" y1="0" x2="250" y2="500"/><line x1="500" y1="0" x2="500" y2="500"/><line x1="750" y1="0" x2="750" y2="500"/>
+          </g>
+          <!-- Equator & Tropic lines -->
+          <line x1="0" y1="250" x2="1000" y2="250" stroke="rgba(240,165,0,.06)" stroke-width="1" stroke-dasharray="4,4"/>
+          <!-- North America -->
+          <path d="M75,75 L200,72 L225,95 L240,140 L225,180 L205,220 L185,242 L162,255 L140,245 L118,225 L98,198 L78,158 L62,118 Z" fill="#141e30" stroke="rgba(255,255,255,.06)" stroke-width=".7"/>
+          <!-- Greenland -->
+          <path d="M205,30 L250,25 L268,40 L260,60 L235,68 L210,60 Z" fill="#141e30" stroke="rgba(255,255,255,.06)" stroke-width=".7"/>
+          <!-- Mexico + Central Am -->
+          <path d="M162,255 L185,242 L195,268 L180,302 L162,312 L150,295 Z" fill="#141e30" stroke="rgba(255,255,255,.06)" stroke-width=".7"/>
+          <!-- South America -->
+          <path d="M198,275 L255,258 L298,275 L308,315 L298,380 L268,432 L238,452 L218,432 L198,380 L182,328 Z" fill="#141e30" stroke="rgba(255,255,255,.06)" stroke-width=".7"/>
+          <!-- Europe -->
+          <path d="M425,75 L508,70 L530,88 L522,112 L502,122 L478,130 L458,122 L440,112 Z" fill="#141e30" stroke="rgba(255,255,255,.06)" stroke-width=".7"/>
+          <!-- Scandinavia -->
+          <path d="M462,38 L488,32 L512,48 L502,70 L480,76 L464,64 Z" fill="#141e30" stroke="rgba(255,255,255,.06)" stroke-width=".7"/>
+          <!-- UK + Ireland -->
+          <path d="M428,78 L445,74 L450,88 L438,95 Z" fill="#141e30" stroke="rgba(255,255,255,.06)" stroke-width=".7"/>
+          <!-- Africa -->
+          <path d="M445,148 L530,138 L562,158 L572,220 L552,302 L512,362 L480,392 L450,380 L428,340 L420,280 L428,210 L438,168 Z" fill="#141e30" stroke="rgba(255,255,255,.06)" stroke-width=".7"/>
+          <!-- Middle East -->
+          <path d="M535,148 L592,142 L612,162 L602,188 L572,195 L542,180 Z" fill="#141e30" stroke="rgba(255,255,255,.06)" stroke-width=".7"/>
+          <!-- Russia -->
+          <path d="M530,35 L750,28 L790,45 L785,75 L720,85 L660,82 L600,78 L545,72 Z" fill="#141e30" stroke="rgba(255,255,255,.06)" stroke-width=".7"/>
+          <!-- Asia -->
+          <path d="M530,72 L700,58 L762,88 L782,122 L752,152 L702,162 L660,182 L622,192 L580,182 L552,162 L532,140 L522,112 Z" fill="#141e30" stroke="rgba(255,255,255,.06)" stroke-width=".7"/>
+          <!-- India (highlighted slightly) -->
+          <path d="M622,165 L662,160 L672,202 L658,252 L640,282 L620,272 L605,232 L608,192 Z" fill="#1e2a3a" stroke="rgba(240,165,0,.15)" stroke-width="1"/>
+          <text x="640" y="220" fill="rgba(240,165,0,.4)" font-family="DM Sans,sans-serif" font-size="7" text-anchor="middle">INDIA</text>
+          <!-- SE Asia -->
+          <path d="M700,168 L752,160 L772,185 L758,212 L725,218 L705,202 Z" fill="#141e30" stroke="rgba(255,255,255,.06)" stroke-width=".7"/>
+          <!-- Japan -->
+          <path d="M795,108 L815,102 L822,118 L812,132 L796,128 Z" fill="#141e30" stroke="rgba(255,255,255,.06)" stroke-width=".7"/>
+          <!-- Australia -->
+          <path d="M748,298 L840,288 L872,318 L862,370 L822,402 L768,402 L738,370 L728,328 Z" fill="#141e30" stroke="rgba(255,255,255,.06)" stroke-width=".7"/>
+          <!-- NZ -->
+          <path d="M882,355 L900,342 L910,360 L900,380 L885,375 Z" fill="#141e30" stroke="rgba(255,255,255,.06)" stroke-width=".7"/>
+          <!-- Antarctica -->
+          <path d="M100,470 L900,470 L920,490 L80,490 Z" fill="#1a2535" stroke="rgba(255,255,255,.04)" stroke-width=".5"/>
+          <text x="500" y="483" fill="rgba(255,255,255,.15)" font-family="DM Sans,sans-serif" font-size="8" text-anchor="middle">ANTARCTICA</text>
+
+          <g id="worldPins"></g>
+        </svg>
+
+        <div class="place-list-grid" id="worldPlaceList"></div>
+        <div class="map-stats-row">
+          <div class="mst"><div class="mst-n" id="w-v">0</div><div class="mst-l">Countries Visited</div></div>
+          <div class="mst"><div class="mst-n" id="w-w">0</div><div class="mst-l">Wishlist</div></div>
+          <div class="mst"><div class="mst-n" id="w-all">0</div><div class="mst-l">Total</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="sec-eye rv">Education</div>
+  <h2 class="sec-h rv">KNOWLEDGE<br><em>Journey</em></h2>
+  <p class="sec-sub rv">From classrooms to open roads — every chapter taught me something.</p>
+  <div class="edu-wrap">
+    <div class="edu-card rv"><div class="edu-yr">2020 — Present</div><div class="edu-title">University / College Name</div><div class="edu-place">📍 Your City, India</div><div class="edu-desc">Describe your degree here — what you studied, what you discovered, how it changed you.</div></div>
+    <div class="edu-card rv d1"><div class="edu-yr">2018 — 2020</div><div class="edu-title">High School</div><div class="edu-place">📍 Your City, India</div><div class="edu-desc">Where the foundation was laid. The years that sparked curiosity and love for learning.</div></div>
+    <div class="edu-card rv d2"><div class="edu-yr">Always</div><div class="edu-title">School of Bharat</div><div class="edu-place">🇮🇳 India — The Open Road</div><div class="edu-desc">28 states, 8 union territories, infinite lessons. The greatest classroom of all.</div></div>
+    <div class="edu-card rv d3"><div class="edu-yr">Self-Taught</div><div class="edu-title">Online Courses & Certifications</div><div class="edu-place">💻 Digital Learning</div><div class="edu-desc">Add any online courses, workshops, or skills you've picked up.</div></div>
+  </div>
+</section>
+
+<!-- HOBBIES -->
+<section id="hobbies">
+  <div class="sec-eye rv">Hobbies</div>
+  <h2 class="sec-h rv">THINGS THAT<br><em>Ignite Me</em></h2>
+  <div class="hob-bento">
+    <div class="hob h1 wide rv"><span class="hob-emoji">✈️</span><div class="hob-name">TRAVELING INDIA</div><p class="hob-desc">From Ladakh's frozen peaks to Kanyakumari's southern tip — every Indian road holds a new story. Bharat is infinite.</p></div>
+    <div class="hob h2 rv d1"><span class="hob-emoji">✍️</span><div class="hob-name">WRITING</div><p class="hob-desc">Words are how I process this beautiful chaos called life.</p></div>
+    <div class="hob h3 rv d2"><span class="hob-emoji">📷</span><div class="hob-name">PHOTOGRAPHY</div><p class="hob-desc">Freezing India's colors before they fade.</p></div>
+    <div class="hob h4 rv"><span class="hob-emoji">📚</span><div class="hob-name">READING</div><p class="hob-desc">Books are the cheapest passport.</p></div>
+    <div class="hob h5 rv d1"><span class="hob-emoji">🎵</span><div class="hob-name">MUSIC</div><p class="hob-desc">The soundtrack to every journey.</p></div>
+    <div class="hob h6 wide rv d2"><span class="hob-emoji">🌱</span><div class="hob-name">YOUR HOBBY</div><p class="hob-desc">Replace with something personal — trekking, cooking, spirituality, sport — whatever makes you, you.</p></div>
+  </div>
+</section>
+
+<!-- STORIES / BLOG -->
+<section id="stories">
+  <div class="sec-eye rv">Stories & Blog</div>
+  <h2 class="sec-h rv">TALES OF<br><em>Freedom</em></h2>
+  <p class="sec-sub rv">Real moments, raw feelings, honest words from the road.</p>
+  <div class="stories-grid">
+    <div class="story feat rv">
+      <div class="story-thumb"><div class="s-bg" style="background:linear-gradient(135deg,#1a1040,#400a10,#102a10)"></div><span class="s-emoji">🌅</span><div class="s-cat">Freedom</div></div>
+      <div class="story-body"><div class="s-meta">📅 January 2024 · 8 min read</div><div class="s-title">The Day I Decided to Live on My Own Terms</div><p class="s-exc">It started with a one-way train ticket and a bag too heavy. This is how I found freedom — and what it costs to keep it...</p><a href="#" class="s-link">Read Full Story <span>→</span></a></div>
+    </div>
+    <div class="story rv d1">
+      <div class="story-thumb"><div class="s-bg" style="background:linear-gradient(135deg,#0d2010,#1a380a)"></div><span class="s-emoji">🏔️</span><div class="s-cat">Travel</div></div>
+      <div class="story-body"><div class="s-meta">📅 March 2024 · 5 min</div><div class="s-title">Ladakh: Where Silence Screams</div><p class="s-exc">High altitude, zero signal, infinite sky...</p><a href="#" class="s-link">Read <span>→</span></a></div>
+    </div>
+    <div class="story rv d1">
+      <div class="story-thumb"><div class="s-bg" style="background:linear-gradient(135deg,#280a0a,#3a1010)"></div><span class="s-emoji">🏜️</span><div class="s-cat">Rajasthan</div></div>
+      <div class="story-body"><div class="s-meta">📅 May 2024 · 6 min</div><div class="s-title">Sleeping Under Stars in Jaisalmer</div><p class="s-exc">The Thar Desert at 2am — no phone, just a blanket and the Milky Way...</p><a href="#" class="s-link">Read <span>→</span></a></div>
+    </div>
+    <div class="story rv">
+      <div class="story-thumb" style="height:150px"><div class="s-bg" style="background:linear-gradient(135deg,#0a1a28,#0a2038)"></div><span class="s-emoji" style="font-size:44px">🌊</span><div class="s-cat">Kerala</div></div>
+      <div class="story-body"><div class="s-meta">📅 July 2024</div><div class="s-title">Alleppey Backwaters</div><p class="s-exc">Slow boat, slower time. Kerala resets everything.</p><a href="#" class="s-link">Read <span>→</span></a></div>
+    </div>
+    <div class="story rv d1">
+      <div class="story-thumb" style="height:150px"><div class="s-bg" style="background:linear-gradient(135deg,#201a08,#2a2808)"></div><span class="s-emoji" style="font-size:44px">🛕</span><div class="s-cat">Heritage</div></div>
+      <div class="story-body"><div class="s-meta">📅 August 2024</div><div class="s-title">Temple Trails of Tamil Nadu</div><p class="s-exc">Stone carvings that outlived empires...</p><a href="#" class="s-link">Read <span>→</span></a></div>
+    </div>
+    <div class="story rv d2">
+      <div class="story-thumb" style="height:150px"><div class="s-bg" style="background:linear-gradient(135deg,#1a2a1a,#203020)"></div><span class="s-emoji" style="font-size:44px">🌿</span><div class="s-cat">Coorg</div></div>
+      <div class="story-body"><div class="s-meta">📅 Your Date</div><div class="s-title">Misty Mornings in Coorg</div><p class="s-exc">Coffee plantations, rain and fog. Karnataka's hidden treasure.</p><a href="#" class="s-link">Read <span>→</span></a></div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="sec-eye rv">Gallery</div>
+  <h2 class="sec-h rv">VISUAL<br><em>Memories</em></h2>
+  <div class="g-tabs rv">
+    <button class="g-tab on" onclick="filterG('all',this)">All</button>
+    <button class="g-tab" onclick="filterG('north',this)">North</button>
+    <button class="g-tab" onclick="filterG('south',this)">South</button>
+    <button class="g-tab" onclick="filterG('nature',this)">Nature</button>
+    <button class="g-tab" onclick="filterG('heritage',this)">Heritage</button>
+    <button class="g-tab" onclick="filterG('life',this)">Daily Life</button>
+  </div>
+  <div class="g-mason rv">
+    <div class="g-item h200" data-cat="north" style="background:linear-gradient(135deg,#1a2535,#253545)" onclick="openLB('🏔️')"><div class="g-img h200">🏔️</div><div class="g-hover"><span>🔍</span><span class="g-ht">Ladakh</span></div></div>
+    <div class="g-item h150" data-cat="heritage" style="background:linear-gradient(135deg,#2a1a10,#3a2a10)" onclick="openLB('🕌')"><div class="g-img h150">🕌</div><div class="g-hover"><span>🔍</span><span class="g-ht">Taj Mahal</span></div></div>
+    <div class="g-item h260" data-cat="south" style="background:linear-gradient(135deg,#0a1a28,#0d2235)" onclick="openLB('🌴')"><div class="g-img h260">🌴</div><div class="g-hover"><span>🔍</span><span class="g-ht">Kerala</span></div></div>
+    <div class="g-item h180" data-cat="life" style="background:linear-gradient(135deg,#1a1520,#28203a)" onclick="openLB('🎆')"><div class="g-img h180">🎆</div><div class="g-hover"><span>🔍</span><span class="g-ht">Diwali</span></div></div>
+    <div class="g-item h240" data-cat="north" style="background:linear-gradient(135deg,#281a0a,#382510)" onclick="openLB('🏜️')"><div class="g-img h240">🏜️</div><div class="g-hover"><span>🔍</span><span class="g-ht">Thar Desert</span></div></div>
+    <div class="g-item h150" data-cat="nature" style="background:linear-gradient(135deg,#0a1a0a,#102010)" onclick="openLB('🌿')"><div class="g-img h150">🌿</div><div class="g-hover"><span>🔍</span><span class="g-ht">Western Ghats</span></div></div>
+    <div class="g-item h200" data-cat="heritage" style="background:linear-gradient(135deg,#1a1530,#24204a)" onclick="openLB('🛕')"><div class="g-img h200">🛕</div><div class="g-hover"><span>🔍</span><span class="g-ht">Tamil Nadu Temple</span></div></div>
+    <div class="g-item h120" data-cat="life" style="background:linear-gradient(135deg,#201a10,#302518)" onclick="openLB('🍛')"><div class="g-img h120">🍛</div><div class="g-hover"><span>🔍</span><span class="g-ht">Street Food</span></div></div>
+    <div class="g-item h200" data-cat="south" style="background:linear-gradient(135deg,#0a2820,#0d3528)" onclick="openLB('⛰️')"><div class="g-img h200">⛰️</div><div class="g-hover"><span>🔍</span><span class="g-ht">Munnar</span></div></div>
+    <div class="g-item h150" data-cat="north" style="background:linear-gradient(135deg,#1a0a28,#28104a)" onclick="openLB('🕍')"><div class="g-img h150">🕍</div><div class="g-hover"><span>🔍</span><span class="g-ht">Varanasi Ghats</span></div></div>
+    <div class="g-item h180" data-cat="nature" style="background:linear-gradient(135deg,#0a1820,#0d2230)" onclick="openLB('🌊')"><div class="g-img h180">🌊</div><div class="g-hover"><span>🔍</span><span class="g-ht">Andaman</span></div></div>
+    <div class="g-item h240" data-cat="heritage" style="background:linear-gradient(135deg,#28200a,#382e10)" onclick="openLB('🏯')"><div class="g-img h240">🏯</div><div class="g-hover"><span>🔍</span><span class="g-ht">Rajasthan Fort</span></div></div>
+  </div>
+</section>
+
+<!-- DOCUMENTS -->
+<section id="documents">
+  <div class="sec-eye rv">Documents & Files</div>
+  <h2 class="sec-h rv">MY<br><em>Resources</em></h2>
+  <div class="docs">
+    <a href="#" class="doc rv"><div class="doc-ico di-p">📄</div><div class="doc-title">My CV / Resume</div><div class="doc-meta">Journey summary</div><div class="doc-div">PDF · Download</div></a>
+    <a href="#" class="doc rv d1"><div class="doc-ico di-d">📝</div><div class="doc-title">Freedom Manifesto</div><div class="doc-meta">My philosophy</div><div class="doc-div">DOC · View</div></a>
+    <a href="#" class="doc rv d2"><div class="doc-ico di-i">🖼️</div><div class="doc-title">Photo Collection</div><div class="doc-meta">Travel photography</div><div class="doc-div">ZIP · Download</div></a>
+    <a href="#" class="doc rv d3"><div class="doc-ico di-l">🔗</div><div class="doc-title">Useful Links</div><div class="doc-meta">Resources & reads</div><div class="doc-div">External</div></a>
+    <a href="#" class="doc rv"><div class="doc-ico di-p">📋</div><div class="doc-title">Travel Notes</div><div class="doc-meta">Raw journey notes</div><div class="doc-div">PDF · View</div></a>
+    <a href="#" class="doc rv d1"><div class="doc-ico di-i">📸</div><div class="doc-title">Certificates</div><div class="doc-meta">Course certificates</div><div class="doc-div">Images · View</div></a>
+    <a href="#" class="doc rv d2"><div class="doc-ico di-d">✍️</div><div class="doc-title">Published Writing</div><div class="doc-meta">Articles & essays</div><div class="doc-div">PDF · Read</div></a>
+    <a href="#" class="doc rv d3"><div class="doc-ico di-l">🌐</div><div class="doc-title">Social Links</div><div class="doc-meta">Find me online</div><div class="doc-div">External</div></a>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="c-glow"></div>
+  <div class="c-inner rv">
+    <div class="sec-eye" style="justify-content:center">Contact</div>
+    <h2 class="c-big">LET'S<br><em>CONNECT</em></h2>
+    <p class="c-sub">Whether you want to share a story, plan a journey together, or simply say hello — I'd love to hear from you.</p>
+    <div class="c-links">
+      <a href="mailto:nurqt@gmail.com" class="c-link"><span>📧</span> Email</a>
+      <a href="#" class="c-link"><span>📸</span> Instagram</a>
+      <a href="#" class="c-link"><span>🎥</span> YouTube</a>
+      <a href="#" class="c-link"><span>📘</span> Facebook</a>
+      <a href="#" class="c-link"><span>📁</span> GitHub</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="f-logo">NK<span>.</span></div>
+  <div class="f-copy">© 2024 Nurqt Kumar · All rights reserved</div>
+  <div class="f-made">Made with <em>♥</em> in Bharat</div>
+</footer>
+
+</div><!-- /app -->
+
+<script>
+/* ══ PARTICLE CANVAS ══ */
+(function(){
+  const c=document.getElementById('particleCanvas'),ctx=c.getContext('2d');
+  let W,H,P=[];
+  function resize(){W=c.width=innerWidth;H=c.height=innerHeight}
+  resize();addEventListener('resize',resize);
+  class Pt{
+    constructor(){
+      const e=Math.floor(Math.random()*4);
+      if(e===0){this.x=Math.random()*W;this.y=-10}
+      else if(e===1){this.x=W+10;this.y=Math.random()*H}
+      else if(e===2){this.x=Math.random()*W;this.y=H+10}
+      else{this.x=-10;this.y=Math.random()*H}
+      this.sz=Math.random()*1.6+.4;this.a=0;
+      this.ta=Math.random()*.7+.3;
+      const dx=W/2-this.x,dy=H/2-this.y,d=Math.sqrt(dx*dx+dy*dy),sp=Math.random()*.5+.15;
+      this.vx=dx/d*sp;this.vy=dy/d*sp;
+      this.life=0;this.max=160+Math.random()*120;
+      this.col=Math.random()<.18?'#e8192c':Math.random()<.45?'#f0a500':'#ffffff';
+    }
+    update(){
+      this.x+=this.vx;this.y+=this.vy;this.life++;
+      if(this.life<25)this.a=this.ta*(this.life/25);
+      else if(this.life>this.max-25)this.a=this.ta*((this.max-this.life)/25);
+      else this.a=this.ta;
+      return this.life<this.max;
+    }
+    draw(){
+      ctx.save();ctx.globalAlpha=this.a;ctx.fillStyle=this.col;
+      ctx.shadowColor=this.col;ctx.shadowBlur=this.col==='#e8192c'?8:3;
+      ctx.beginPath();ctx.arc(this.x,this.y,this.sz,0,Math.PI*2);ctx.fill();ctx.restore();
+    }
+  }
+  for(let i=0;i<180;i++)P.push(new Pt());
+  let fr=0;
+  function loop(){
+    if(!document.getElementById('intro').classList.contains('out')){
+      ctx.clearRect(0,0,W,H);
+      ctx.fillStyle='rgba(0,0,8,.12)';ctx.fillRect(0,0,W,H);
+      for(let i=0;i<P.length;i++){
+        if(P[i].col!=='#e8192c')continue;
+        for(let j=i+1;j<P.length;j++){
+          if(P[j].col!=='#e8192c')continue;
+          const dx=P[i].x-P[j].x,dy=P[i].y-P[j].y,d=Math.sqrt(dx*dx+dy*dy);
+          if(d<90){ctx.beginPath();ctx.strokeStyle=`rgba(232,25,44,${(1-d/90)*.12})`;ctx.lineWidth=.5;ctx.moveTo(P[i].x,P[i].y);ctx.lineTo(P[j].x,P[j].y);ctx.stroke()}
+        }
+      }
+      P=P.filter(p=>p.update());P.forEach(p=>p.draw());
+      fr++;if(fr%3===0&&P.length<220)P.push(new Pt());
+      requestAnimationFrame(loop);
+    }
+  }
+  loop();
+})();
+
+/* ══ TYPING INTRO ══ */
+const fullName = "Nurqt Kumar";
+let ti = 0, typingStarted = false;
+function startTyping(){
+  if(typingStarted) return;
+  typingStarted = true;
+  const el = document.getElementById('typingName');
+  function type(){
+    if(ti <= fullName.length){
+      el.textContent = fullName.slice(0, ti);
+      ti++;
+      setTimeout(type, ti===1?0:80 + Math.random()*60);
+    }
+  }
+  type();
+}
+setTimeout(startTyping, 1300);
+
+/* ══ CURSOR ══ */
+const cur=document.getElementById('cur'),ring=document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.transform=`translate(${mx-4}px,${my-4}px)`});
+(function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.transform=`translate(${rx-16}px,${ry-16}px)`;requestAnimationFrame(loop)})();
+document.querySelectorAll('a,button,.g-item,.story,.hob,.doc,.pi,.hl-item').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{ring.style.width='44px';ring.style.height='44px';ring.style.borderColor='var(--red)'});
+  el.addEventListener('mouseleave',()=>{ring.style.width='32px';ring.style.height='32px';ring.style.borderColor='rgba(240,165,0,.5)'});
+});
+
+/* ══ ENTER SITE ══ */
+function enterSite(){
+  document.getElementById('intro').classList.add('out');
+  const app=document.getElementById('app');
+  setTimeout(()=>{
+    document.getElementById('intro').style.display='none';
+    app.classList.add('on');
+    document.body.style.overflow='auto';
+    runCounters();
+    renderIndiaMap();
+    renderWorldMap();
+    buildHighlights();
+  },800);
+}
+document.body.style.overflow='hidden';
+setTimeout(()=>{if(!document.getElementById('intro').classList.contains('out'))enterSite()},8500);
+
+/* ══ COUNTERS ══ */
+function runCounters(){
+  document.querySelectorAll('[data-t]').forEach(el=>{
+    const t=parseInt(el.dataset.t);let c=0;const s=t/60;
+    const timer=setInterval(()=>{c=Math.min(c+s,t);el.textContent=Math.floor(c);if(c>=t){el.textContent=t;clearInterval(timer)}},25);
+  });
+}
+
+/* ══ SCROLL REVEAL ══ */
+const obs=new IntersectionObserver(e=>e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('show')}),{threshold:.08});
+document.querySelectorAll('.rv').forEach(el=>obs.observe(el));
+
+/* ══════════════════════════════
+   STORY HIGHLIGHTS
+══════════════════════════════ */
+// To add real photos via GitHub: put images in /images/ folder, then replace 'emoji' key
+// with a 'photo' key like: photo:'images/mytrip.jpg'
+const highlights = [
+  {id:1,label:'Ladakh Trip',date:'2 days ago',emoji:'🏔️',bg:'linear-gradient(135deg,#1a2a3a,#2a3a4a)',title:'Pangong Lake Sunrise',caption:'The most breathtaking blue I have ever seen. Worth every km of the ride.'},
+  {id:2,label:'Jaisalmer',date:'1 week ago',emoji:'🏜️',bg:'linear-gradient(135deg,#3a2010,#4a3010)',title:'Desert Night Sky',caption:'2AM in the Thar. No city lights, just millions of stars and silence.'},
+  {id:3,label:'Kerala',date:'2 weeks ago',emoji:'🌴',bg:'linear-gradient(135deg,#0a2a1a,#0a3a20)',title:'Backwater Sunrise',caption:'Woke up on a houseboat to this. Kerala is another world entirely.'},
+  {id:4,label:'Varanasi',date:'1 month ago',emoji:'🛕',bg:'linear-gradient(135deg,#2a1a10,#3a2510)',title:'Ganga Aarti',caption:'Thousands of lamps on the Ganga. Spiritual overload — in the best way.'},
+  {id:5,label:'Amritsar',date:'1 month ago',emoji:'🌟',bg:'linear-gradient(135deg,#1a2010,#283010)',title:'Golden Temple at 4AM',caption:'Most peaceful place on Earth. The Golden Temple before sunrise is magic.'},
+  {id:6,label:'Coorg',date:'2 months ago',emoji:'🌿',bg:'linear-gradient(135deg,#0a1a0a,#102010)',title:'Coffee Plantation Walk',caption:'Misty mornings, coffee aroma, and silence that heals everything.'},
+  {id:7,label:'Agra',date:'3 months ago',emoji:'🕌',bg:'linear-gradient(135deg,#1a1520,#24203a)',title:'Taj Mahal at Dawn',caption:'First rays hitting the white marble. Nothing prepares you for this.'},
+  {id:8,label:'Rishikesh',date:'4 months ago',emoji:'🏄',bg:'linear-gradient(135deg,#0a1a2a,#0d2235)',title:'Rafting the Ganges',caption:'White water + sacred river = completely wild experience.'},
+];
+
+let currentStory = 0, storyTimer = null, storyActive = [];
+
+function buildHighlights(){
+  const strip = document.getElementById('hlStrip');
+  strip.innerHTML = '';
+  highlights.forEach((h,i)=>{
+    const item = document.createElement('div');
+    item.className = 'hl-item';
+    item.onclick = () => openStoryViewer(i);
+    item.innerHTML = `
+      <div class="hl-ring">
+        <div class="hl-inner">${h.emoji}</div>
+      </div>
+      <div class="hl-label"><strong>${h.label}</strong>${h.date}</div>
+    `;
+    strip.appendChild(item);
+  });
+  // Add "+" placeholder at end
+  const add = document.createElement('div');
+  add.className = 'hl-add';
+  add.title = 'Add via GitHub — upload to /images/ folder';
+  add.innerHTML = `<div class="hl-add-circle">+</div><div class="hl-label" style="font-size:10px;color:var(--muted)">Add via<br>GitHub</div>`;
+  strip.appendChild(add);
+}
+
+function openStoryViewer(idx){
+  storyActive = highlights;
+  currentStory = idx;
+  document.getElementById('storyViewer').classList.add('open');
+  renderStory();
+}
+
+function renderStory(){
+  if(storyTimer) clearInterval(storyTimer);
+  const s = storyActive[currentStory];
+  // Media
+  document.getElementById('svBg').style.background = s.bg;
+  document.getElementById('svEmoji').textContent = s.emoji;
+  document.getElementById('svTitle').textContent = s.title;
+  document.getElementById('svText').textContent = s.caption;
+  document.getElementById('svTime').textContent = s.date;
+  // Progress bars
+  const prog = document.getElementById('svProgress');
+  prog.innerHTML = '';
+  storyActive.forEach((_,i)=>{
+    const bar = document.createElement('div');bar.className='sv-prog-bar';
+    const fill = document.createElement('div');fill.className='sv-prog-fill';
+    if(i<currentStory) fill.classList.add('done');
+    if(i===currentStory){fill.classList.add('active');fill.style.setProperty('--dur','5s')}
+    bar.appendChild(fill);prog.appendChild(bar);
+  });
+  // Mark ring as seen
+  const items = document.querySelectorAll('.hl-item');
+  if(items[currentStory]) items[currentStory].querySelector('.hl-ring').style.background='conic-gradient(#555 0deg,#666 360deg)';
+  // Auto next
+  storyTimer = setTimeout(()=>{
+    if(currentStory < storyActive.length-1){currentStory++;renderStory()}
+    else closeStoryViewer();
+  },5000);
+}
+
+function nextStory(){
+  if(currentStory<storyActive.length-1){currentStory++;renderStory()}
+  else closeStoryViewer();
+}
+function prevStory(){
+  if(currentStory>0){currentStory--;renderStory()}
+}
+function closeStoryViewer(){
+  if(storyTimer)clearInterval(storyTimer);
+  document.getElementById('storyViewer').classList.remove('open');
+}
+document.getElementById('storyViewer').addEventListener('click',e=>{if(e.target.id==='storyViewer')closeStoryViewer()});
+
+/* ══════════════════════════════
+   INDIA MAP
+══════════════════════════════ */
+const indiaPlaces = [
+  {name:'Delhi',state:'Delhi',status:'visited',note:'Capital city — iconic!',x:237,y:163},
+  {name:'Agra',state:'Uttar Pradesh',status:'visited',note:'Taj Mahal at sunrise 🌅',x:248,y:180},
+  {name:'Jaipur',state:'Rajasthan',status:'visited',note:'Pink City — incredible forts',x:195,y:184},
+  {name:'Jodhpur',state:'Rajasthan',status:'visited',note:'Blue City vibes',x:155,y:198},
+  {name:'Jaisalmer',state:'Rajasthan',status:'want',note:'Desert camping under stars',x:128,y:208},
+  {name:'Varanasi',state:'Uttar Pradesh',status:'visited',note:'Most spiritual city on Earth',x:328,y:196},
+  {name:'Mumbai',state:'Maharashtra',status:'visited',note:'City of dreams',x:138,y:345},
+  {name:'Pune',state:'Maharashtra',status:'visited',note:'Student city & culture',x:155,y:358},
+  {name:'Goa',state:'Goa',status:'visited',note:'Best beaches + vibes',x:142,y:410},
+  {name:'Bengaluru',state:'Karnataka',status:'visited',note:'Garden City — great weather',x:202,y:442},
+  {name:'Mysuru',state:'Karnataka',status:'visited',note:'Palace & Dasara festival',x:196,y:455},
+  {name:'Hampi',state:'Karnataka',status:'visited',note:'UNESCO heritage — stunning ruins',x:208,y:408},
+  {name:'Chennai',state:'Tamil Nadu',status:'visited',note:'Gateway of South India',x:305,y:470},
+  {name:'Madurai',state:'Tamil Nadu',status:'visited',note:'Meenakshi Temple mesmerized me',x:248,y:502},
+  {name:'Kanyakumari',state:'Tamil Nadu',status:'visited',note:'Southernmost tip of India',x:228,y:555},
+  {name:'Kochi',state:'Kerala',status:'want',note:'Backwaters & Chinese fishing nets',x:175,y:488},
+  {name:'Munnar',state:'Kerala',status:'want',note:'Tea hills & morning mist',x:188,y:482},
+  {name:'Thiruvananthapuram',state:'Kerala',status:'want',note:'Kerala capital',x:178,y:548},
+  {name:'Rishikesh',state:'Uttarakhand',status:'visited',note:'Yoga, rafting & Ganga',x:262,y:126},
+  {name:'Haridwar',state:'Uttarakhand',status:'visited',note:'Ganga Aarti at dusk',x:258,y:132},
+  {name:'Amritsar',state:'Punjab',status:'visited',note:'Golden Temple at 4AM — most peaceful',x:180,y:100},
+  {name:'Shimla',state:'Himachal Pradesh',status:'visited',note:'Colonial charm & snow',x:232,y:112},
+  {name:'Manali',state:'Himachal Pradesh',status:'want',note:'Rohtang Pass & snow peaks',x:215,y:80},
+  {name:'Leh',state:'Ladakh',status:'want',note:'Dream trip — Pangong Lake!',x:245,y:42},
+  {name:'Chandigarh',state:'Punjab',status:'visited',note:'Planned city — Rock Garden',x:200,y:118},
+  {name:'Kolkata',state:'West Bengal',status:'want',note:'City of Joy — must experience',x:398,y:228},
+  {name:'Hyderabad',state:'Telangana',status:'visited',note:'Biryani capital & Charminar',x:270,y:362},
+  {name:'Ahmedabad',state:'Gujarat',status:'visited',note:'Heritage & Sabarmati Ashram',x:98,y:255},
+  {name:'Bhopal',state:'Madhya Pradesh',status:'visited',note:'City of Lakes',x:218,y:278},
+  {name:'Khajuraho',state:'Madhya Pradesh',status:'want',note:'UNESCO temple complex',x:268,y:255},
+  {name:'Darjeeling',state:'West Bengal',status:'want',note:'Tea & Kanchenjunga view',x:400,y:172},
+  {name:'Gangtok',state:'Sikkim',status:'want',note:'Mountain capital',x:408,y:162},
+  {name:'Puri',state:'Odisha',status:'want',note:'Jagannath Temple & beach',x:390,y:305},
+  {name:'Coorg',state:'Karnataka',status:'want',note:'Misty coffee plantation hills',x:185,y:448},
+  {name:'Ooty',state:'Tamil Nadu',status:'want',note:'Nilgiri hills toy train 🚂',x:215,y:472},
+  {name:'Pondicherry',state:'Tamil Nadu',status:'want',note:'French colony + beaches',x:295,y:484},
+  {name:'Bodh Gaya',state:'Bihar',status:'want',note:'Where Buddha attained enlightenment',x:318,y:205},
+];
+
+function getColor(s){return s==='visited'?'#4ade80':'#f0a500'}
+function getLabel(s){return s==='visited'?'✅ Visited':'⭐ Wishlist'}
+
+function renderIndiaMap(){
+  const g=document.getElementById('indiaPins');
+  g.innerHTML='';
+  indiaPlaces.forEach(p=>{
+    const col=getColor(p.status);
+    const gr=document.createElementNS('http://www.w3.org/2000/svg','g');
+
+    if(p.status==='visited'){
+      const pulse=document.createElementNS('http://www.w3.org/2000/svg','circle');
+      pulse.setAttribute('cx',p.x);pulse.setAttribute('cy',p.y);pulse.setAttribute('r','4');
+      pulse.setAttribute('fill','none');pulse.setAttribute('stroke',col);pulse.setAttribute('stroke-width','1');
+      const a1=document.createElementNS('http://www.w3.org/2000/svg','animate');
+      a1.setAttribute('attributeName','r');a1.setAttribute('values','3;10');a1.setAttribute('dur',`${1.8+Math.random()*.8}s`);a1.setAttribute('repeatCount','indefinite');
+      const a2=document.createElementNS('http://www.w3.org/2000/svg','animate');
+      a2.setAttribute('attributeName','opacity');a2.setAttribute('values','0.6;0');a2.setAttribute('dur',`${1.8+Math.random()*.8}s`);a2.setAttribute('repeatCount','indefinite');
+      pulse.appendChild(a1);pulse.appendChild(a2);gr.appendChild(pulse);
+    }
+
+    const dot=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    dot.setAttribute('cx',p.x);dot.setAttribute('cy',p.y);dot.setAttribute('r',p.status==='visited'?'3.5':'2.5');
+    dot.setAttribute('fill',col);dot.setAttribute('filter',`drop-shadow(0 0 3px ${col})`);
+    gr.appendChild(dot);
+
+    gr.addEventListener('mouseenter',evt=>{
+      showTip(p.name,`📍 ${p.state}`,getLabel(p.status),col,p.note,evt);
+    });
+    gr.addEventListener('mousemove',evt=>{moveTip(evt)});
+    gr.addEventListener('mouseleave',hideTip);
+
+    g.appendChild(gr);
+  });
+
+  // State path tooltips
+  document.querySelectorAll('.state-path').forEach(path=>{
+    const st=path.getAttribute('data-state');
+    path.addEventListener('mouseenter',evt=>{
+      const sp=indiaPlaces.filter(p=>p.state===st);
+      const tip=`${sp.length} place${sp.length!==1?'s':''} tracked${sp.length?': '+sp.slice(0,3).map(p=>p.name).join(', ')+(sp.length>3?' ...':''):''}`;
+      showTip(st,tip,'','var(--muted)','',evt);
+    });
+    path.addEventListener('mousemove',evt=>{moveTip(evt)});
+    path.addEventListener('mouseleave',hideTip);
+  });
+
+  // List
+  const list=document.getElementById('indiaPlaceList');
+  list.innerHTML='';
+  const byState={};
+  indiaPlaces.forEach(p=>{if(!byState[p.state])byState[p.state]=[];byState[p.state].push(p)});
+  Object.keys(byState).sort().forEach(state=>{
+    byState[state].forEach(p=>{
+      const item=document.createElement('div');item.className='pi';
+      item.innerHTML=`<div class="pi-dot" style="background:${getColor(p.status)};box-shadow:0 0 5px ${getColor(p.status)}88"></div><div><div class="pi-name">${p.name}</div><div class="pi-sub">${p.state}</div></div>`;
+      list.appendChild(item);
+    });
+  });
+
+  const v=indiaPlaces.filter(p=>p.status==='visited').length;
+  const w=indiaPlaces.filter(p=>p.status==='want').length;
+  const states=new Set(indiaPlaces.map(p=>p.state)).size;
+  document.getElementById('ind-v').textContent=v;
+  document.getElementById('ind-w').textContent=w;
+  document.getElementById('ind-all').textContent=indiaPlaces.length;
+  document.getElementById('ind-states').textContent=states;
+}
+
+/* ══ WORLD MAP ══ */
+const worldCoords = {
+  'India':[640,218],'Nepal':[628,185],'Sri Lanka':[648,280],
+  'Japan':[808,120],'South Korea':[790,130],'China':[720,155],'Thailand':[730,212],'Vietnam':[752,215],
+  'UAE':[595,195],'Saudi Arabia':[575,200],'Turkey':[542,135],
+  'UK':[435,85],'France':[458,102],'Germany':[480,90],'Italy':[480,112],'Spain':[440,118],'Greece':[505,118],
+  'USA':[148,162],'Canada':[132,90],'Mexico':[162,255],
+  'Brazil':[252,318],'Argentina':[235,402],'Peru':[215,312],
+  'Australia':[792,345],'New Zealand':[892,365],
+  'Egypt':[518,162],'Morocco':[440,158],'Kenya':[542,272],'South Africa':[490,368],
+  'Russia':[640,72],'Norway':[478,58],
+  'Antarctica':[500,480],
+  'Maldives':[625,258],'Singapore':[752,240],'Malaysia':[748,235],
+  'Iceland':[400,62],'Portugal':[428,118],'Netherlands':[468,86],
+};
+
+const worldPlaces = [
+  {name:'Nepal',country:'Nepal',status:'visited',note:'Himalayas — spiritual reset 🏔️'},
+  {name:'UAE',country:'UAE',status:'visited',note:'Dubai & Abu Dhabi — wow'},
+  {name:'Thailand',country:'Thailand',status:'want',note:'Temples, food & islands'},
+  {name:'Japan',country:'Japan',status:'want',note:'Cherry blossoms & culture'},
+  {name:'Australia',country:'Australia',status:'want',note:'Great Barrier Reef someday'},
+  {name:'USA',country:'USA',status:'want',note:'New York, Grand Canyon, Yosemite'},
+  {name:'New Zealand',country:'New Zealand',status:'want',note:'LOTR landscapes + adventure'},
+  {name:'Antarctica',country:'Antarctica',status:'want',note:'The ultimate frontier — someday! 🧊'},
+  {name:'Maldives',country:'Maldives',status:'want',note:'Crystal waters & overwater bungalows'},
+  {name:'Sri Lanka',country:'Sri Lanka',status:'want',note:'Close neighbor, rich culture'},
+  {name:'Turkey',country:'Turkey',status:'want',note:'Istanbul & Cappadocia'},
+  {name:'Italy',country:'Italy',status:'want',note:'Art, food & ancient history'},
+];
+
+function renderWorldMap(){
+  const g=document.getElementById('worldPins');
+  g.innerHTML='';
+  worldPlaces.forEach(p=>{
+    const coords=worldCoords[p.country];
+    if(!coords)return;
+    const [x,y]=coords;
+    const col=getColor(p.status);
+    const gr=document.createElementNS('http://www.w3.org/2000/svg','g');
+
+    if(p.status==='visited'){
+      const pulse=document.createElementNS('http://www.w3.org/2000/svg','circle');
+      pulse.setAttribute('cx',x);pulse.setAttribute('cy',y);pulse.setAttribute('r','5');
+      pulse.setAttribute('fill','none');pulse.setAttribute('stroke',col);pulse.setAttribute('stroke-width','1');
+      const a1=document.createElementNS('http://www.w3.org/2000/svg','animate');
+      a1.setAttribute('attributeName','r');a1.setAttribute('values','4;14');a1.setAttribute('dur','2s');a1.setAttribute('repeatCount','indefinite');
+      const a2=document.createElementNS('http://www.w3.org/2000/svg','animate');
+      a2.setAttribute('attributeName','opacity');a2.setAttribute('values','0.6;0');a2.setAttribute('dur','2s');a2.setAttribute('repeatCount','indefinite');
+      pulse.appendChild(a1);pulse.appendChild(a2);gr.appendChild(pulse);
+    }
+
+    const dot=document.createElementNS('http://www.w3.org/2000/svg','circle');
+    dot.setAttribute('cx',x);dot.setAttribute('cy',y);dot.setAttribute('r','4');
+    dot.setAttribute('fill',col);dot.setAttribute('filter',`drop-shadow(0 0 5px ${col})`);
+    gr.appendChild(dot);
+
+    const label=document.createElementNS('http://www.w3.org/2000/svg','text');
+    label.setAttribute('x',x+6);label.setAttribute('y',y-6);
+    label.setAttribute('fill','rgba(255,255,255,.55)');label.setAttribute('font-size','7.5');
+    label.setAttribute('font-family','DM Sans,sans-serif');
+    label.textContent=p.name;gr.appendChild(label);
+
+    gr.addEventListener('mouseenter',evt=>showTip(p.name,p.country,getLabel(p.status),col,p.note,evt));
+    gr.addEventListener('mousemove',evt=>moveTip(evt));
+    gr.addEventListener('mouseleave',hideTip);
+    g.appendChild(gr);
+  });
+
+  // List
+  const list=document.getElementById('worldPlaceList');
+  list.innerHTML='';
+  worldPlaces.forEach(p=>{
+    const item=document.createElement('div');item.className='pi';
+    item.innerHTML=`<div class="pi-dot" style="background:${getColor(p.status)};box-shadow:0 0 5px ${getColor(p.status)}88"></div><div><div class="pi-name">${p.name}</div><div class="pi-sub">${p.country}${p.note?' — '+p.note:''}</div></div>`;
+    list.appendChild(item);
+  });
+
+  const v=worldPlaces.filter(p=>p.status==='visited').length;
+  const w=worldPlaces.filter(p=>p.status==='want').length;
+  document.getElementById('w-v').textContent=v;
+  document.getElementById('w-w').textContent=w;
+  document.getElementById('w-all').textContent=worldPlaces.length;
+}
+
+/* ══ MAP VIEW TOGGLE ══ */
+function switchMapView(view,btn){
+  document.querySelectorAll('.map-tab-outer').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  document.querySelectorAll('.map-view').forEach(v=>v.classList.remove('on'));
+  document.getElementById('map'+view.charAt(0).toUpperCase()+view.slice(1)).classList.add('on');
+}
+
+/* ══ TOOLTIP ══ */
+function showTip(name,state,status,col,note,evt){
+  const t=document.getElementById('mapTip');
+  document.getElementById('tipName').textContent=name;
+  document.getElementById('tipState').textContent=note?`${state} — ${note}`:state;
+  document.getElementById('tipStatus').textContent=status;
+  document.getElementById('tipStatus').style.color=col;
+  t.style.opacity='1';
+  moveTip(evt);
+}
+function moveTip(evt){
+  const t=document.getElementById('mapTip');
+  t.style.left=`${evt.clientX+14}px`;t.style.top=`${evt.clientY-10}px`;
+}
+function hideTip(){document.getElementById('mapTip').style.opacity='0'}
+
+/* ══ GALLERY FILTER ══ */
+function filterG(cat,btn){
+  document.querySelectorAll('.g-tab').forEach(b=>b.classList.remove('on'));btn.classList.add('on');
+  document.querySelectorAll('.g-item').forEach(item=>{item.style.display=(cat==='all'||item.dataset.cat===cat)?'block':'none'});
+}
+
+/* ══ LIGHTBOX ══ */
+function openLB(c){document.getElementById('lb-c').innerHTML=c;document.getElementById('lb').classList.add('open')}
+function closeLB(){document.getElementById('lb').classList.remove('open')}
+document.getElementById('lb').addEventListener('click',e=>{if(e.target.id==='lb')closeLB()});
+
+/* ══ NAV ══ */
+let navOpen=false;const nl=document.getElementById('navLinks');
+function toggleNav(){
+  navOpen=!navOpen;
+  nl.style.cssText=navOpen?'display:flex;flex-direction:column;position:absolute;top:58px;left:0;right:0;background:rgba(4,4,12,.98);padding:20px;border-bottom:1px solid var(--border);backdrop-filter:blur(20px);gap:16px;z-index:999':'';
+}
+nl.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{if(window.innerWidth<=960){navOpen=false;nl.style.cssText=''}}));
+window.addEventListener('scroll',()=>{
+  const n=document.getElementById('nav');
+  const isM=window.innerWidth<=960;
+  n.style.padding=scrollY>50?(isM?'10px 20px':'12px 60px'):(isM?'14px 20px':'18px 60px');
+});
+</script>
+</body>
+</html>
